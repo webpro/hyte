@@ -1,0 +1,64 @@
+<html>
+    <head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Hybrid Templating</title>
+    </head>
+    <body>
+
+		<h1>hyte</h1>
+
+		<p>HYbrid TEmplating for the browser and Node.</p>
+
+		<div id="placeholder"></div>
+
+		<!-- Libs -->
+		<script src="js/hogan-2.0.0.min.js"></script>
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/require-1.0.8.min.js"></script>
+
+		<!-- Pre-compiled templates () -->
+		<script src="compiled.js"></script>
+
+		<script>
+
+			/*
+			 * Using pre-compiled concatenated templates (from compiled.js)
+			 */
+
+			$.getJSON('/data/list.json', function(data) {
+				var html = app.templates['list'].render(data);
+				$('#placeholder').append(html);
+			});
+
+			/*
+			 * Fetching pre-compiled, separate templates
+			 */
+
+			require(['/compile/paragraph'], function(compiledTemplate) {
+				var html = compiledTemplate.render({"message": "This is rendered client-side in a pre-compiled template."});
+				$('#placeholder').append(html);
+			});
+
+			/*
+			 * Render HTML completely server-side
+			 */
+
+			var dataURI = location.protocol + '//' + location.host + '/data/paragraph.json';
+
+			$.get('/render/paragraph/' + encodeURIComponent(dataURI), function(renderedTemplate) {
+				$('#placeholder').append(renderedTemplate);
+			});
+
+			/*
+			 * Render POSTed data
+			 */
+
+			var data = {"message": "This is pre-rendered server-side."};
+
+			$.post('/render/paragraph', data, function(renderedTemplate) {
+				$('#placeholder').append(renderedTemplate);
+			});
+
+		</script>
+    </body>
+</html>
