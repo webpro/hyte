@@ -21,6 +21,7 @@ app.configure(function () {
 	app.use(express.methodOverride());
 	app.use(app.router);
 	app.use(express.static(__dirname + '/public'));
+
 });
 
 app.configure('development', function () {
@@ -42,7 +43,6 @@ hyte.configure({
 	compiledFile: __dirname + '/public/compiled.js'
 });
 
-
 /*
  * Overwrite compile method for use with hogan
  */
@@ -55,7 +55,6 @@ app.register('html', {
 		};
 	}
 });
-
 
 /*
  * Just pre-compile all templates when starting server
@@ -71,6 +70,8 @@ hyte.compileAll();
  * Route: GET /compile/:view
  *
  * :view is resolved to the path templateDir+view+templateExtension
+ *
+ * E.g. /compile/list compiles /public/views/list.html into JS
  */
 
 
@@ -89,6 +90,8 @@ app.get('/compile/:view', function(req, res) {
  * :data is the absolute (encoded) URI that the view data will be requested from
  *
  * E.g. /render/paragraph/http%3A%2F%2Flocalhost%3A3000%2Fdata%2Fparagraph.json
+ * returns rendered HTML based on the /public/views/paragraph.html templates and
+ * the data served by http://localhost:3000/data/paragraph.json
  */
 
 app.get('/render/:view/:dataURI', function(req, res) {
@@ -104,7 +107,9 @@ app.get('/render/:view/:dataURI', function(req, res) {
  * Route: POST /render/:view
  *
  * :view is resolved to the path templateDir+view+templateExtension
- * Data is send with this request using POST
+ *
+ * E.g. /compile/paragraph will render the template at
+ * /public/views/paragraph.html using the POSTed data
  */
 
 app.post('/render/:view', function(req, res) {
