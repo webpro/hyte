@@ -15,7 +15,7 @@ Running the server will give you services at `http://localhost:3000` to:
 
 ### Pre-compiled concatenated templates
 
-All pre-compiled, concatenated templates from `/public/views/*.html` are compiled to JS and available at `/compiled.js`. This file itself is also using a template (`/public/views/compiled.template.mustache`):
+All templates at `/public/views/*.html` are compiled and concatenated to JS and available at `/compiled.js`. This file itself is also using a template: `/public/views/compiled.template.mustache`.
 
 Example result for /compiled.js (object property keys directly taken from filename):
 
