@@ -120,7 +120,6 @@ var hyte = function() {
 	var render = function(view, data, res) {
 
 		res.header('Content-Type', 'text/html');
-		res.header('Access-Control-Allow-Origin', '*');
 		res.render(templateDir + view + templateExtension, data);
 
 	};
