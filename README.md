@@ -1,6 +1,6 @@
 # hyte
 
-HYbrid TEmplating for the browser and Node.
+HYbrid TEmplating for the browser and Node. Using [Hogan.js](http://twitter.github.com/hogan.js/) (based on [mustache](http://mustache.github.com/mustache.5.html)) as templating engine.
 
 ## Installation
 
