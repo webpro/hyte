@@ -9,6 +9,13 @@ HYbrid TEmplating for the browser and Node. Using [Hogan.js](http://twitter.gith
 
 You can now browse to `http://localhost:3000/index.html` for a demo.
 
+## Quick overview
+
+* All your pre-compiled templates at `/compiled.js`
+* Compile separate templates via `/compile/[template]`
+* Server-side rendering of templates via `/render/[template]/[encoded-endpoint-url]`
+* Render template server-side using POST data
+
 ## Services
 
 Running the server will give you services at `http://localhost:3000` to:
