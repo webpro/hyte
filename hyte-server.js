@@ -1,16 +1,14 @@
-/*
- * Module dependencies
- */
+// ## The hyte server
+
+// Server dependencies
 
 var express = require('express'),
 	hogan = require('hogan.js'),
 	hyte = require('./modules/hyte.js');
 
-var app = module.exports = express.createServer();
+var app = express.createServer();
 
-/*
- * Express Configuration
- */
+// ## Express configuration
 
 app.configure(function () {
 
@@ -32,20 +30,7 @@ app.configure('production', function () {
 	app.use(express.errorHandler());
 });
 
-/*
- * Hyte Configuration
- */
-
-hyte.configure({
-	templateDir: __dirname + '/public/views/',
-	templateExtension: '.html',
-	compileTemplateFile: __dirname + '/public/views/compiled.template.mustache',
-	compiledFile: __dirname + '/public/compiled.js'
-});
-
-/*
- * Overwrite compile method for use with hogan
- */
+// Overwrite compile method for use with hogan
 
 app.register('html', {
 	compile: function() {
@@ -56,23 +41,13 @@ app.register('html', {
 	}
 });
 
-/*
- * Just pre-compile all templates when starting server
- */
+// ## Routes
 
-hyte.compileAll();
-
-/*
- * Routes
- */
-
-/*
- * Route: GET /compile/:view
- *
- * :view is resolved to the path templateDir+view+templateExtension
- *
- * E.g. /compile/list compiles /public/views/list.html into JS
- */
+// **`/compile/:view`**
+//
+// `:view` will resolve to `templateDir`+`view`+`templateExtension`.
+//
+// E.g. `/compile/list` compiles `/public/views/list.html` into JS.
 
 
 app.get('/compile/:view', function(req, res) {
@@ -83,16 +58,14 @@ app.get('/compile/:view', function(req, res) {
 
 });
 
-/*
- * Route: GET /render/:view/:data
- *
- * :view is resolved to the path templateDir+view+templateExtension
- * :data is the absolute (encoded) URI that the view data will be requested from
- *
- * E.g. /render/paragraph/http%3A%2F%2Flocalhost%3A3000%2Fdata%2Fparagraph.json
- * returns rendered HTML based on the /public/views/paragraph.html templates and
- * the data served by http://localhost:3000/data/paragraph.json
- */
+// **`/render/:view/:dataURI`**
+//
+// `:view` will resolve to `templateDir`+`view`+`templateExtension`
+// `:dataURI` is the absolute (encoded) URI that the view data will be requested from
+//
+// E.g. `/render/paragraph/http%3A%2F%2Flocalhost%3A3000%2Fdata%2Fparagraph.json`
+// returns rendered HTML based on the `/public/views/paragraph.html` template and
+// the data served by `http://localhost:3000/data/paragraph.json`.
 
 app.get('/render/:view/:dataURI', function(req, res) {
 
@@ -103,14 +76,12 @@ app.get('/render/:view/:dataURI', function(req, res) {
 
 });
 
-/*
- * Route: POST /render/:view
- *
- * :view is resolved to the path templateDir+view+templateExtension
- *
- * E.g. /compile/paragraph will render the template at
- * /public/views/paragraph.html using the POSTed data
- */
+// **`/render/:view`** (POST)
+//
+// `:view` will resolve to `templateDir`+`view`+`templateExtension`
+//
+// E.g. `/compile/paragraph` will render the template at
+// `/public/views/paragraph.html` using the POSTed data
 
 app.post('/render/:view', function(req, res) {
 
@@ -119,17 +90,19 @@ app.post('/render/:view', function(req, res) {
 
 });
 
-/*
- * Route: GET /recompile
- *
- * This will re-compile all templates in the configured views directory
- */
+// **`/recompile`**
+//
+// This will re-compile all templates in the configured views directory
 
 app.get('/recompile', hyte.compileAll);
 
-/*
- * Start server
- */
+// ## Finishing
+
+// Just pre-compile all templates when starting server
+
+hyte.compileAll();
+
+// Start the server
 
 app.listen(3000, function () {
 	console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

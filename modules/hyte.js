@@ -1,26 +1,40 @@
+// ## HYbrid TEmplating
+
+// Module dependencies
+
 var http = require('http'),
 	fs = require('fs'),
 	hogan = require('hogan.js');
 
-var hyte = function() {
+// Module definition
+
+module.exports = function() {
 
 	'use strict';
 
+	// ## Configuration
+
+	// Root directory
+
+	var rootDir = __dirname + '/..';
+
 	// Directory containing mustache/hogan template files
-	var templateDir;
+
+	var templateDir = rootDir + '/public/views/';
 
 	// Extension used for mustache/hogan template files
-	var templateExtension;
 
-	// JavaScript template that will contain all pre-compiled templates
-	var compileTemplateFile;
+	var templateExtension = '.html';
 
-	// Target file that will contain all pre-compiled templates
-	var compiledFile;
+	// JavaScript template to render compiled templates
 
-	/*
-	 * Configure some file/path directives
-	 */
+	var compileTemplateFile = rootDir + '/public/views/compiled.template.mustache';
+
+	// Target file that will contain all pre-compiled templates (using `compileTemplateFile`)
+
+	var compiledFile = rootDir + '/public/compiled.js';
+
+	// Use `hyte.configure()` to overwrite default value(s).
 
 	var configure = function(options) {
 
@@ -31,58 +45,18 @@ var hyte = function() {
 
 	};
 
-	/*
-	 * Reads a template file, and serves the pre-compiled JS template function (AMD-style)
-	 */
+	// ## Private methods
 
-	var compile = function(view, res) {
-
-		fs.readFile(templateDir + view + templateExtension, 'utf8', function(error, data) {
-
-			var content = hogan.compile('define(new Hogan.Template({{{content}}}))').render({
-				content: hogan.compile(data, {asString: true})
-			});
-
-			res.header('Content-Type', 'text/javascript');
-			res.send(content);
-
-		});
-
-	};
-
-	/*
-	 * Stores pre-compiled template in a .js file
-	 */
-
-	var compileAll = function(req, res) {
-
-		// Array containing the pre-compiled templates
-		// Each element has {id:templateFileName, script:compiledTemplate, last:[false|true]}
-		var compiledTemplates = compileTemplates();
-
-		var content = hogan.compile(fs.readFileSync(compileTemplateFile, 'utf8')).render({
-			templates: compiledTemplates
-		});
-
-		fs.writeFile(compiledFile, content, 'utf8', function(error) {
-
-			if(error) {
-				throw error;
-			}
-
-			if(req && res) {
-				res.header('Content-Type', 'text/plain');
-				res.send('Templates successfully recompiled.');
-			}
-
-			console.log('Pre-compiled templates saved as ' + compiledFile);
-		});
-
-	};
-
-	/*
-	 * Reads all template files, and pre-compiles them
-	 */
+	// Reads all template files from the `templateDir` that match
+	// the `templateExtension` and compiles them.
+	//
+	// Returned data format to be used in `compileTemplateFile`:
+	//
+	//     [{
+	// 	       id: templateFileName,
+	// 	       script: compiledTemplate,
+	// 	       last: [false|true]
+	//     }]
 
 	var compileTemplates = function() {
 
@@ -113,9 +87,57 @@ var hyte = function() {
 
 	};
 
-	/*
-	 * Renders a template using the provided data, serves the result as HTML
-	 */
+	// ## Public methods
+
+	// Read a template file,
+	// and serve the compiled JS template as an AMD-style module.
+
+	var compile = function(view, res) {
+
+		fs.readFile(templateDir + view + templateExtension, 'utf8', function(error, data) {
+
+			var content = hogan.compile('define(new Hogan.Template({{{content}}}))').render({
+				content: hogan.compile(data, {asString: true})
+			});
+
+			res.header('Content-Type', 'text/javascript');
+			res.send(content);
+
+		});
+
+	};
+
+	// Pre-compiles all templates, and writes them to the `compiledFile` file
+
+	var compileAll = function(req, res) {
+
+		// Array containing the compiled templates,
+		// representing data to be rendered in `compileTemplateFile`.
+
+		var compiledTemplates = compileTemplates();
+
+		var content = hogan.compile(fs.readFileSync(compileTemplateFile, 'utf8')).render({
+			templates: compiledTemplates
+		});
+
+		fs.writeFile(compiledFile, content, 'utf8', function(error) {
+
+			if(error) {
+				throw error;
+			}
+
+			if(req && res) {
+				res.header('Content-Type', 'text/plain');
+				res.send('Templates successfully recompiled.');
+			}
+
+			console.log('Pre-compiled templates saved as ' + compiledFile);
+		});
+
+	};
+
+	// Renders a template using the provided `data`,
+	// and serves the result as HTML.
 
 	var render = function(view, data, res) {
 
@@ -124,9 +146,8 @@ var hyte = function() {
 
 	};
 
-	/*
-	 * Request data from specified endpoint, then pass to render()
-	 */
+	// Request data from specified endpoint.
+	// Then pass the `view` reference and `data` to `render()`
 
 	var renderFromEndpoint = function(view, dataURI, res) {
 
@@ -150,6 +171,8 @@ var hyte = function() {
 
 	};
 
+	// Export the API
+
 	return {
 		configure: configure,
 		compile: compile,
@@ -159,5 +182,3 @@ var hyte = function() {
 	};
 
 }();
-
-module.exports = hyte;

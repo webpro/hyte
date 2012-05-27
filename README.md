@@ -11,10 +11,27 @@ You can now browse to `http://localhost:3000/index.html` for a demo.
 
 ## Quick overview
 
+The included **server** provides:
+
 * All your pre-compiled templates at `/compiled.js`
-* Compile separate templates via `/compile/[template]`
+* Pre-compile separate templates via `/compile/[template]`
 * Server-side rendering of templates via `/render/[template]/[encoded-endpoint-url]`
-* Render template server-side using POST data
+* Render template server-side using POST data at `/render/[template]`
+
+The **hyte module** can also be integrated stand-alone using this API:
+
+* `hyte.compile(template)`
+* `hyte.compileAll()`
+* `hyte.render(template, data)`
+* `hyte.renderFromEndpoint(template, url)`
+
+On the **client**, pre-compiled templates can be rendered...
+
+* `var renderedTemplate = compiledTemplate.render(data)`;
+
+...or just, when pre-rendered on the server...
+
+* `$('#placeholder).html(renderedTemplate);`
 
 ## Services
 
@@ -22,7 +39,7 @@ Running the server will give you services at `http://localhost:3000` to:
 
 ### Pre-compiled concatenated templates
 
-All templates at `/public/views/*.html` are compiled and concatenated to JS and available at `/compiled.js`. This file itself is also using a template: `/public/views/compiled.template.mustache`.
+All templates at `/public/views/*.html` are pre-compiled and concatenated to JS and available at `/compiled.js`. This file itself is also using a template: `/public/views/compiled.template.mustache`.
 
 Example result for /compiled.js (object property keys directly taken from filename):
 
@@ -41,7 +58,7 @@ Location: (GET) `http://localhost:3000/compiled.js`
 
 Suggested usage: make sure the first and/or most used templates are pre-compiled like this.
 
-### Compile separate templates
+### Pre-compile separate templates
 
 Pre-compiled templates are available at `/compile/[template]`. Compiled to JS in AMD style from `/public/views/[template].html`.
 
@@ -87,7 +104,7 @@ Get pre-rendered HTML from server by providing reference to template and POST da
 
 Location: (POST) `http://localhost:3000/render/[template]`
 
-Suggested usage: the data is available client-side, but the pre-compiled template is not.
+Suggested usage: the data is available client-side, but the compiled template is not.
 
 ### Static server
 
