@@ -49,12 +49,12 @@ app.register('html', {
 //
 // E.g. `/compile/list` compiles `/public/views/list.html` into JS.
 
-
 app.get('/compile/:view', function(req, res) {
 
-	var view = req.params.view;
+	var content = hyte.compile(req.params.view);
 
-	hyte.compile(view, res);
+	res.header('Content-Type', 'text/javascript');
+	res.send(content);
 
 });
 
@@ -64,15 +64,17 @@ app.get('/compile/:view', function(req, res) {
 // `:dataURI` is the absolute (encoded) URI that the view data will be requested from
 //
 // E.g. `/render/paragraph/http%3A%2F%2Flocalhost%3A3000%2Fdata%2Fparagraph.json`
-// returns rendered HTML based on the `/public/views/paragraph.html` template and
-// the data served by `http://localhost:3000/data/paragraph.json`.
+// serves rendered HTML based on the `/public/views/paragraph.html` template and
+// the data response from `http://localhost:3000/data/paragraph.json`.
 
 app.get('/render/:view/:dataURI', function(req, res) {
 
-	var view = req.params.view;
-	var dataURI = req.params.dataURI;
+	hyte.renderFromEndpoint(req.params.view, req.params.dataURI, function(content) {
 
-	hyte.renderFromEndpoint(view, dataURI, res);
+		res.header('Content-Type', 'text/html');
+		res.send(content);
+
+	});
 
 });
 
@@ -85,8 +87,12 @@ app.get('/render/:view/:dataURI', function(req, res) {
 
 app.post('/render/:view', function(req, res) {
 
-	var view = req.params.view;
-	hyte.render(view, req.body, res);
+	hyte.render(req.params.view, req.body, function(content) {
+
+		res.header('Content-Type', 'text/html');
+		res.send(content);
+
+	});
 
 });
 
@@ -94,7 +100,19 @@ app.post('/render/:view', function(req, res) {
 //
 // This will re-compile all templates in the configured views directory
 
-app.get('/recompile', hyte.compileAll);
+app.get('/recompile', function(req, res) {
+
+	var success = hyte.compileAll();
+
+	if(success) {
+
+		res.header('Content-Type', 'text/plain');
+		res.send('Templates successfully recompiled.');
+
+	}
+
+
+});
 
 // ## Finishing
 

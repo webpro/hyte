@@ -22,8 +22,8 @@ The **hyte module** can also be integrated stand-alone using this API:
 
 * `hyte.compile(template)`
 * `hyte.compileAll()`
-* `hyte.render(template, data)`
-* `hyte.renderFromEndpoint(template, url)`
+* `hyte.render(template, data, callback)`
+* `hyte.renderFromEndpoint(template, url, callback)`
 
 On the **client**, pre-compiled templates can be rendered...
 

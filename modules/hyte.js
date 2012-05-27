@@ -92,7 +92,7 @@ module.exports = function() {
 	// Read a template file,
 	// and serve the compiled JS template as an AMD-style module.
 
-	var compile = function(view, res) {
+	var compile = function(view) {
 
 		fs.readFile(templateDir + view + templateExtension, 'utf8', function(error, data) {
 
@@ -100,8 +100,7 @@ module.exports = function() {
 				content: hogan.compile(data, {asString: true})
 			});
 
-			res.header('Content-Type', 'text/javascript');
-			res.send(content);
+			return content;
 
 		});
 
@@ -126,12 +125,9 @@ module.exports = function() {
 				throw error;
 			}
 
-			if(req && res) {
-				res.header('Content-Type', 'text/plain');
-				res.send('Templates successfully recompiled.');
-			}
-
 			console.log('Pre-compiled templates saved as ' + compiledFile);
+
+			return true;
 		});
 
 	};
@@ -139,17 +135,18 @@ module.exports = function() {
 	// Renders a template using the provided `data`,
 	// and serves the result as HTML.
 
-	var render = function(view, data, res) {
+	var render = function(view, data, callback) {
 
-		res.header('Content-Type', 'text/html');
-		res.render(templateDir + view + templateExtension, data);
+		var content = hogan.compile(fs.readFileSync(templateDir + view + templateExtension, 'utf8')).render(data);
+
+		callback.apply(null, [content])
 
 	};
 
 	// Request data from specified endpoint.
 	// Then pass the `view` reference and `data` to `render()`
 
-	var renderFromEndpoint = function(view, dataURI, res) {
+	var renderFromEndpoint = function(view, dataURI, callback) {
 
 		http.get(require('url').parse(dataURI), function(resEndpoint) {
 
@@ -163,7 +160,7 @@ module.exports = function() {
 
 			resEndpoint.on('end', function() {
 
-				render(view, JSON.parse(json), res);
+				render(view, JSON.parse(json), callback);
 
 			});
 
