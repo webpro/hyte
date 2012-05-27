@@ -4,8 +4,8 @@ HYbrid TEmplating for the browser and Node. Using [Hogan.js](http://twitter.gith
 
 ## Installation
 
-* `npm install`
-* `node hyte-server.js`
+	npm install
+	node server.js
 
 You can now browse to `http://localhost:3000/index.html` for a demo.
 
