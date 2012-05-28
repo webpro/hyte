@@ -4,6 +4,7 @@
 
 var http = require('http'),
 	fs = require('fs'),
+	async = require('async'),
 	hogan = require('hogan.js');
 
 // Module definition
@@ -54,11 +55,10 @@ module.exports = function() {
 	//
 	//     [{
 	// 	       id: templateFileName,
-	// 	       script: compiledTemplate,
-	// 	       last: [false|true]
+	// 	       script: compiledTemplate
 	//     }]
 
-	var compileTemplates = function() {
+	var compileTemplates = function(callback) {
 
 		var compiledTemplates = [];
 
@@ -70,20 +70,25 @@ module.exports = function() {
 
 		});
 
-		templateFiles.forEach(function(templateFile, i) {
+		async.forEach(templateFiles, function(templateFile, callback) {
 
 			var templateName = templateFile.substr(0, templateFile.lastIndexOf('.'));
-			var fileContents = fs.readFileSync(templateDir + templateFile, 'utf8');
+			fs.readFile(templateDir + templateFile, 'utf8', function(error, content) {
 
-			compiledTemplates.push({
-				id: templateName,
-				script: hogan.compile(fileContents, {asString: true}),
-				last: i === templateFiles.length - 1
+				compiledTemplates.push({
+					id: templateName,
+					script: hogan.compile(content, {asString: true})
+				});
+
+				callback(error);
+
 			});
 
-		});
+		}, function(error) {
 
-		return compiledTemplates;
+			callback(error, compiledTemplates);
+
+		});
 
 	};
 
@@ -96,86 +101,132 @@ module.exports = function() {
 
 		callback = callback || function(){};
 
-		fs.readFile(templateDir + view + templateExtension, 'utf8', function(error, data) {
+		async.waterfall([
 
-			if(error) {
-				console.log(error);
-				return callback(error);
+			// Read the template file (referred to by `view`)
+
+			function(next) {
+
+				fs.readFile(templateDir + view + templateExtension, 'utf8', function(error, content) {
+
+					next(error, content);
+
+				});
+
+			},
+
+			// Compile the template file into AMD styled JS module
+
+			function(content, next) {
+
+				var content = hogan.compile('define(new Hogan.Template({{{content}}}))').render({
+					content: hogan.compile(content, {asString: true})
+				});
+
+				next(null, content);
+
 			}
 
-			var content = hogan.compile('define(new Hogan.Template({{{content}}}))').render({
-				content: hogan.compile(data, {asString: true})
-			});
+		// Call original callback
 
-			callback(null, content);
-
-		});
+		], callback);
 
 	};
 
-	// Pre-compiles all templates, and writes them to the `compiledFile` file
+	// Pre-compiles all templates, and writes them to the `compiledFile` file (using `compileTemplateFile`)
 
 	var compileAll = function(callback) {
 
 		callback = callback || function(){};
 
-		// Array containing the compiled templates,
-		// representing data to be rendered in `compileTemplateFile`.
+		async.auto({
 
-		var compiledTemplates = compileTemplates();
+			// Compile templates
 
-		fs.readFile(compileTemplateFile, 'utf8', function(error, content) {
+			compile_templates: function(next) {
 
-			// In case `compileTemplateFile` can't be read, the server
-			// doesn't need to be stopped.
+				compileTemplates(function(error, compiledTemplates) {
 
-			if(error) {
-				console.log(error);
-				return callback(error);
-			}
+					next(error, compiledTemplates);
 
-			var content = hogan.compile(content).render({
-				templates: compiledTemplates
-			});
+				});
 
-			fs.writeFile(compiledFile, content, 'utf8', function(error) {
+			},
 
-				// In case `compiledFile` can't be written, the server
-				// doesn't need to be stopped.
+			// Read `compileTemplateFile`
 
-				if(error) {
-					console.log(error);
-					return callback(error);
-				}
+			read_templateFile: function(next) {
 
-				console.log('Pre-compiled templates saved as ' + compiledFile);
+				fs.readFile(compileTemplateFile, 'utf8', function(error, content) {
 
-				callback();
-			});
+					next(error, content);
+
+				});
+
+			},
+
+			// Compile the compiled templates into the `compileTemplateFile`
+
+			compile_templateFile: ['compile_templates', 'read_templateFile', function(next, results) {
+
+				var content = hogan.compile(results['read_templateFile']).render({
+					templates: results['compile_templates']
+				});
+
+				next(null, content);
+
+			}],
+
+			// Write the compiled templates into `compiledFile`
+
+			write_templateFile: ['compile_templateFile', function(next, results) {
+
+				fs.writeFile(compiledFile, results['compile_templateFile'], 'utf8', function(error) {
+					next(error);
+				});
+			}]
+
+			// Call original callback
+
+		}, function(error, results) {
+
+			callback(error, results['compile_templateFile']);
 
 		});
 
 	};
 
 	// Renders a template using the provided `data`,
-	// and serves the result as HTML.
+	// and return the HTML result
 
 	var render = function(view, data, callback) {
 
-		callback = callback || function(){};
+		async.waterfall([
 
-		fs.readFile(templateDir + view + templateExtension, 'utf8', function(error, content) {
+			// Read the template file (referred to by `view`)
 
-			if(error) {
-				console.log(error);
-				return callback(error);
+			function(next) {
+
+				fs.readFile(templateDir + view + templateExtension, 'utf8', function(error, content) {
+
+					next(error, content);
+
+				});
+
+			},
+
+			// Render the template (using the provided `data`)
+
+			function(content, next) {
+
+				var content = hogan.compile(content).render(data);
+
+				next(null, content);
 			}
 
-			var content = hogan.compile(content).render(data);
+		// Call original callback
 
-			callback(null, content);
-
-		});
+		], callback);
 
 	};
 
