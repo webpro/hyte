@@ -4,6 +4,7 @@
 
 var http = require('http'),
 	fs = require('fs'),
+	url = require('url'),
 	async = require('async'),
 	hogan = require('hogan.js');
 
@@ -73,11 +74,11 @@ module.exports = function() {
 		async.forEach(templateFiles, function(templateFile, callback) {
 
 			var templateName = templateFile.substr(0, templateFile.lastIndexOf('.'));
-			fs.readFile(templateDir + templateFile, 'utf8', function(error, content) {
+			fs.readFile(templateDir + templateFile, 'utf8', function(error, template) {
 
 				compiledTemplates.push({
 					id: templateName,
-					script: hogan.compile(content, {asString: true})
+					script: hogan.compile(template, {asString: true})
 				});
 
 				callback(error);
@@ -107,9 +108,9 @@ module.exports = function() {
 
 			function(next) {
 
-				fs.readFile(templateDir + view + templateExtension, 'utf8', function(error, content) {
+				fs.readFile(templateDir + view + templateExtension, 'utf8', function(error, template) {
 
-					next(error, content);
+					next(error, template);
 
 				});
 
@@ -117,13 +118,13 @@ module.exports = function() {
 
 			// Compile the template file into AMD styled JS module
 
-			function(content, next) {
+			function(template, next) {
 
-				var content = hogan.compile('define(new Hogan.Template({{{content}}}))').render({
-					content: hogan.compile(content, {asString: true})
+				var compiledTemplate = hogan.compile('define(new Hogan.Template({{{content}}}))').render({
+					content: hogan.compile(template, {asString: true})
 				});
 
-				next(null, content);
+				next(null, compiledTemplate);
 
 			}
 
@@ -157,9 +158,9 @@ module.exports = function() {
 
 			read_templateFile: function(next) {
 
-				fs.readFile(compileTemplateFile, 'utf8', function(error, content) {
+				fs.readFile(compileTemplateFile, 'utf8', function(error, template) {
 
-					next(error, content);
+					next(error, template);
 
 				});
 
@@ -207,9 +208,9 @@ module.exports = function() {
 
 			function(next) {
 
-				fs.readFile(templateDir + view + templateExtension, 'utf8', function(error, content) {
+				fs.readFile(templateDir + view + templateExtension, 'utf8', function(error, template) {
 
-					next(error, content);
+					next(error, template);
 
 				});
 
@@ -217,11 +218,11 @@ module.exports = function() {
 
 			// Render the template (using the provided `data`)
 
-			function(content, next) {
+			function(template, next) {
 
-				var content = hogan.compile(content).render(data);
+				var compiledTemplate = hogan.compile(template).render(data);
 
-				next(null, content);
+				next(null, compiledTemplate);
 			}
 
 		// Call original callback
@@ -235,7 +236,7 @@ module.exports = function() {
 
 	var renderFromEndpoint = function(view, dataURI, callback) {
 
-		http.get(require('url').parse(dataURI), function(resEndpoint) {
+		http.get(url.parse(dataURI), function(resEndpoint) {
 
 			var json = '';
 
