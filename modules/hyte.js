@@ -92,15 +92,22 @@ module.exports = function() {
 	// Read a template file,
 	// and serve the compiled JS template as an AMD-style module.
 
-	var compile = function(view) {
+	var compile = function(view, callback) {
+
+		callback = callback || function(){};
 
 		fs.readFile(templateDir + view + templateExtension, 'utf8', function(error, data) {
+
+			if(error) {
+				console.log(error);
+				return callback(error);
+			}
 
 			var content = hogan.compile('define(new Hogan.Template({{{content}}}))').render({
 				content: hogan.compile(data, {asString: true})
 			});
 
-			return content;
+			callback(null, content);
 
 		});
 
@@ -108,26 +115,44 @@ module.exports = function() {
 
 	// Pre-compiles all templates, and writes them to the `compiledFile` file
 
-	var compileAll = function(req, res) {
+	var compileAll = function(callback) {
+
+		callback = callback || function(){};
 
 		// Array containing the compiled templates,
 		// representing data to be rendered in `compileTemplateFile`.
 
 		var compiledTemplates = compileTemplates();
 
-		var content = hogan.compile(fs.readFileSync(compileTemplateFile, 'utf8')).render({
-			templates: compiledTemplates
-		});
+		fs.readFile(compileTemplateFile, 'utf8', function(error, content) {
 
-		fs.writeFile(compiledFile, content, 'utf8', function(error) {
+			// In case `compileTemplateFile` can't be read, the server
+			// doesn't need to be stopped.
 
 			if(error) {
-				throw error;
+				console.log(error);
+				return callback(error);
 			}
 
-			console.log('Pre-compiled templates saved as ' + compiledFile);
+			var content = hogan.compile(content).render({
+				templates: compiledTemplates
+			});
 
-			return true;
+			fs.writeFile(compiledFile, content, 'utf8', function(error) {
+
+				// In case `compiledFile` can't be written, the server
+				// doesn't need to be stopped.
+
+				if(error) {
+					console.log(error);
+					return callback(error);
+				}
+
+				console.log('Pre-compiled templates saved as ' + compiledFile);
+
+				callback();
+			});
+
 		});
 
 	};
@@ -137,9 +162,20 @@ module.exports = function() {
 
 	var render = function(view, data, callback) {
 
-		var content = hogan.compile(fs.readFileSync(templateDir + view + templateExtension, 'utf8')).render(data);
+		callback = callback || function(){};
 
-		callback.apply(null, [content])
+		fs.readFile(templateDir + view + templateExtension, 'utf8', function(error, content) {
+
+			if(error) {
+				console.log(error);
+				return callback(error);
+			}
+
+			var content = hogan.compile(content).render(data);
+
+			callback(null, content);
+
+		});
 
 	};
 

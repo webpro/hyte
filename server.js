@@ -51,10 +51,22 @@ app.register('html', {
 
 app.get('/compile/:view', function(req, res) {
 
-	var content = hyte.compile(req.params.view);
+	hyte.compile(req.params.view, function(error, content) {
 
-	res.header('Content-Type', 'text/javascript');
-	res.send(content);
+		if(error) {
+
+			res.statusCode = 500;
+			res.header('Content-Type', 'text/plain');
+			res.send('Template not compiled.');
+
+		} else {
+
+			res.header('Content-Type', 'text/javascript');
+			res.send(content);
+
+		}
+
+	});
 
 });
 
@@ -69,10 +81,20 @@ app.get('/compile/:view', function(req, res) {
 
 app.get('/render/:view/:dataURI', function(req, res) {
 
-	hyte.renderFromEndpoint(req.params.view, req.params.dataURI, function(content) {
+	hyte.renderFromEndpoint(req.params.view, req.params.dataURI, function(error, content) {
 
-		res.header('Content-Type', 'text/html');
-		res.send(content);
+		if(error) {
+
+			res.statusCode = 500;
+			res.header('Content-Type', 'text/plain');
+			res.send('Template not rendered.');
+
+		} else {
+
+			res.header('Content-Type', 'text/javascript');
+			res.send(content);
+
+		}
 
 	});
 
@@ -87,12 +109,22 @@ app.get('/render/:view/:dataURI', function(req, res) {
 
 app.post('/render/:view', function(req, res) {
 
-	hyte.render(req.params.view, req.body, function(content) {
+	hyte.render(req.params.view, req.body, function(error, content) {
 
-		res.header('Content-Type', 'text/html');
-		res.send(content);
+			if(error) {
 
-	});
+				res.statusCode = 500;
+				res.header('Content-Type', 'text/plain');
+				res.send('Template not rendered.');
+
+			} else {
+
+				res.header('Content-Type', 'text/html');
+				res.send(content);
+
+			}
+
+		});
 
 });
 
@@ -102,15 +134,22 @@ app.post('/render/:view', function(req, res) {
 
 app.get('/recompile', function(req, res) {
 
-	var success = hyte.compileAll();
+	hyte.compileAll(function(error) {
 
-	if(success) {
+		if(error) {
 
-		res.header('Content-Type', 'text/plain');
-		res.send('Templates successfully recompiled.');
+			res.statusCode = 500;
+			res.header('Content-Type', 'text/plain');
+			res.send('Templates not recompiled.');
 
-	}
+		} else {
 
+			res.header('Content-Type', 'text/plain');
+			res.send('Templates successfully recompiled.');
+
+		}
+
+	});
 
 });
 
