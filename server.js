@@ -134,7 +134,7 @@ app.post('/render/:view', function(req, res) {
 
 app.get('/recompile', function(req, res) {
 
-	hyte.compileAll(function(error) {
+	hyte.compileAll(function(error, content) {
 
 		if(error) {
 
@@ -144,8 +144,8 @@ app.get('/recompile', function(req, res) {
 
 		} else {
 
-			res.header('Content-Type', 'text/plain');
-			res.send('Templates successfully recompiled.');
+			res.header('Content-Type', 'text/javascript');
+			res.send(content);
 
 		}
 
