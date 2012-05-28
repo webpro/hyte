@@ -24,11 +24,11 @@ module.exports = function() {
 
 	var templateDir = rootDir + '/public/views/';
 
-	// Extension used for mustache/hogan template files
+	// File extension used for mustache/hogan template files
 
 	var templateExtension = '.html';
 
-	// JavaScript template to render compiled templates
+	// JavaScript template to render compiled templates (the "template template file") to `compiledFile`
 
 	var compileTemplateFile = rootDir + '/public/views/compiled.template.mustache';
 
@@ -50,7 +50,7 @@ module.exports = function() {
 	// ## Private methods
 
 	// Reads all template files from the `templateDir` that match
-	// the `templateExtension` and compiles them.
+	// the `templateExtension` and compiles them
 	//
 	// Returned data format to be used in `compileTemplateFile`:
 	//
@@ -96,7 +96,7 @@ module.exports = function() {
 	// ## Public methods
 
 	// Read a template file,
-	// and serve the compiled JS template as an AMD-style module.
+	// and serve the compiled JS template as an AMD-style module
 
 	var compile = function(view, callback) {
 
