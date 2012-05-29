@@ -97,6 +97,40 @@ module.exports = function() {
 
 	};
 
+	// To make a GET request and return JSON
+
+	var requestFromEndpoint = function(dataURI, callback) {
+
+		var json = '';
+
+		http.get(url.parse(dataURI), function(resEndpoint) {
+
+			if(resEndpoint.statusCode >= 400) {
+				return callback(new Error('Endpoint returned: ' + resEndpoint.statusCode));
+			}
+
+			resEndpoint.on('data', function(data) {
+
+				json += data.toString();
+
+			});
+
+			resEndpoint.on('end', function() {
+
+				callback(null, JSON.parse(json));
+
+			});
+
+		}).on('error', function(error) {
+
+			console.log(error);
+
+			callback(error);
+
+		});
+
+	}
+
 	// ## Public methods
 
 	// Read a template file,
@@ -260,21 +294,9 @@ module.exports = function() {
 
 	var renderFromEndpoint = function(view, dataURI, callback) {
 
-		http.get(url.parse(dataURI), function(resEndpoint) {
+		requestFromEndpoint(dataURI, function(error, response) {
 
-			var json = '';
-
-			resEndpoint.on('data', function(data) {
-
-				json += data.toString();
-
-			});
-
-			resEndpoint.on('end', function() {
-
-				render(view, JSON.parse(json), callback);
-
-			});
+			render(view, response, callback);
 
 		});
 
