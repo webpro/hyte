@@ -87,6 +87,10 @@ module.exports = function() {
 
 		}, function(error) {
 
+			if(error) {
+				console.log(error);
+			}
+
 			callback(error, compiledTemplates);
 
 		});
@@ -130,7 +134,15 @@ module.exports = function() {
 
 		// Call original callback
 
-		], callback);
+		], function(error, result) {
+
+			if(error) {
+				console.log(error);
+			}
+
+			callback(error, result);
+
+		});
 
 	};
 
@@ -187,9 +199,13 @@ module.exports = function() {
 				});
 			}]
 
-			// Call original callback
+		// Call original callback
 
 		}, function(error, results) {
+
+			if(error) {
+				console.log(error);
+			}
 
 			callback(error, results['compile_templateFile']);
 
@@ -227,7 +243,15 @@ module.exports = function() {
 
 		// Call original callback
 
-		], callback);
+		], function(error, result) {
+
+			if(error) {
+				console.log(error);
+			}
+
+			callback(error, result);
+
+		});
 
 	};
 
