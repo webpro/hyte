@@ -2,7 +2,6 @@
 	"name":"hyte",
 	"version":"0.0.2",
 	"description":"HYbrid TEmplating for the browser and Node.",
-	"private":true,
 	"author": {
 		"name": "Lars Kappert",
 		"email": "lars@webpro.nl"
