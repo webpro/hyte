@@ -195,7 +195,7 @@ Run tests using mocha
 
 	make test
 
-Generate test coverage report to docs/coverage.html
+Generate test coverage report to docs/coverage.html (requires [node-jscoverage](https://github.com/visionmedia/node-jscoverage))
 
 	make test-cov
 

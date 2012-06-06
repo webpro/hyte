@@ -1,0 +1,1 @@
+module.exports = process.env.EXPRESS_COV ? require('./../../modules-cov/hyte') : require('./../../hyte');
