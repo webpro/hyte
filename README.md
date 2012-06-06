@@ -9,6 +9,8 @@ HYbrid TEmplating for the browser and Node. Using [Hogan.js](http://twitter.gith
 * [Pre-compiled templates](#pre-compiled-templates)
 * [Quick overview: hyte](#quick-overview-hyte)
 * [Services](#services)
+* [Tests](#tests)
+* [Annotated source code](#annotated-source-code)
 * [Shouts / dependencies](#shouts--dependencies)
 
 ## Installation
@@ -186,6 +188,22 @@ Suggested usage: the data is available client-side, but the compiled template is
 ### Static server
 
 Static files from `/public` are available from the root url. E.g. `/index.html` is served from `/public/index.html`.
+
+## Tests
+
+Run tests using mocha
+
+	make test
+
+Generate test coverage report to docs/coverage.html
+
+	make test-cov
+
+## Annotated source code
+
+Generate annotated source code in docs folder (using [Docco](http://jashkenas.github.com/docco/))
+
+    make docs
 
 ## Shouts / dependencies
 
