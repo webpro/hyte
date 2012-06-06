@@ -1,6 +1,6 @@
 {
 	"name":"hyte",
-	"version":"0.0.2",
+	"version":"0.0.3",
 	"description":"HYbrid TEmplating for the browser and Node.",
 	"keywords": ["template", "server", "client"],
 	"author": {
