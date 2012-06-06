@@ -7,6 +7,7 @@
 		"name": "Lars Kappert",
 		"email": "lars@webpro.nl"
 	},
+	"main": "./lib/hyte.js",
 	"dependencies": {
 		"express": "2.5.9",
 		"hogan.js": "2.0.0",

@@ -11,6 +11,6 @@ test-cov: lib-cov
 	@EXPRESS_COV=1 $(MAKE) test REPORTER=html-cov > docs/coverage.html
 
 lib-cov:
-	@jscoverage modules modules-cov
+	@jscoverage lib lib-cov
 
 .PHONY: test docs

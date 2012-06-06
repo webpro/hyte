@@ -1,1 +1,1 @@
-module.exports = process.env.EXPRESS_COV ? require('./../../modules-cov/hyte') : require('./../../hyte');
+module.exports = process.env.EXPRESS_COV ? require('./../../lib-cov/hyte') : require('./../../hyte');
