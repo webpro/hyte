@@ -2,6 +2,7 @@
 	"name":"hyte",
 	"version":"0.0.2",
 	"description":"HYbrid TEmplating for the browser and Node.",
+	"keywords": ["template", "server", "client"],
 	"author": {
 		"name": "Lars Kappert",
 		"email": "lars@webpro.nl"
@@ -18,5 +19,9 @@
 		"mocha": "1.1.0",
 		"chai": "1.0.3",
 		"nock": "0.13.2"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://webpro@github.com/webpro/hyte.git"
 	}
 }
