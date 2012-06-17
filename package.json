@@ -10,6 +10,7 @@
 	"main": "./lib/hyte.js",
 	"dependencies": {
 		"express": "2.5.9",
+		"commander": "0.6.1",
 		"hogan.js": "2.0.0",
 		"async": "0.1.22"
 	},
@@ -19,7 +20,8 @@
 	"devDependencies": {
 		"mocha": "1.1.0",
 		"chai": "1.0.3",
-		"nock": "0.13.2"
+		"nock": "0.13.2",
+		"chokidar": "0.2.6"
 	},
 	"repository": {
 		"type": "git",

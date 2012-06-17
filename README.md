@@ -20,6 +20,8 @@ HYbrid TEmplating for the browser and Node. Using [Hogan.js](http://twitter.gith
 
 You can now browse to `http://localhost:3000/index.html` for a demo.
 
+Use `node server.js --watcher` to enable the template file watcher (to recompile templates when it changes).
+
 ## Templating 101
 
 Most JavaScript templating engines do their work in two phases:
@@ -188,6 +190,10 @@ Suggested usage: the data is available client-side, but the compiled template is
 ### Static server
 
 Static files from `/public` are available from the root url. E.g. `/index.html` is served from `/public/index.html`.
+
+### Watcher
+
+Files from the template directory are watched for changes, and then automatically re-compiled.
 
 ## Tests
 

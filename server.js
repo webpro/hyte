@@ -1,12 +1,21 @@
-// ## The hyte server
+// # The hyte server
 
 // Server dependencies
 
 var express = require('express'),
+	program = require('commander'),
 	hogan = require('hogan.js'),
-	hyte = require('hyte');
+	hyte = require('hyte'),
+	hyteWatcher = require('./lib/hyte-watcher');
 
 var app = express.createServer();
+
+// ## CLI options
+
+program
+	.version('0.0.3')
+	.option('-w, --watcher', 'Enable hyteWatcher')
+	.parse(process.argv);
 
 // ## Express configuration
 
@@ -164,3 +173,9 @@ hyte.compileAll();
 app.listen(3000, function () {
 	console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
+
+// Start watching templates for changes (then pre-compile them)
+
+if(program.watcher) {
+	hyteWatcher();
+}
