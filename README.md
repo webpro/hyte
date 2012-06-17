@@ -27,64 +27,64 @@ Use `node server.js --watcher` to enable the template file watcher (to recompile
 Most JavaScript templating engines do their work in two phases:
 
 1. compile the template
-    * in: template
-    * out: compiled template as a JavaScript function
+	* in: template
+	* out: compiled template as a JavaScript function
 2. render the template
-    * in: compiled template + data
-    * out: populated template, usually HTML
+	* in: compiled template + data
+	* out: populated template, usually HTML
 
 Hogan, the basis for hyte, also works like this. So, a Mustache template like this..
 
 	<h1>{{title}}</h1>
-	<ul>                 
-        {{#names}}         
-            <li>{{name}}</li>
-        {{/names}}         
-	</ul> 
+	<ul>
+		{{#names}}
+			<li>{{name}}</li>
+		{{/names}}
+	</ul>
 
 ..can be compiled..
 
-    var template = hogan.compile('<h1>{{title}}</h1><ul>{{#names}}<li>{{name}}</li>{{/names}}</ul>');
+	var template = hogan.compile('<h1>{{title}}</h1><ul>{{#names}}<li>{{name}}</li>{{/names}}</ul>');
 
 ..resulting in a JavaScript function..
 
-    function(c,p,i){var _=this;_.b(i=i||"");_.b("<h1>");_.b(_.v(_.f("title",c,p,0)));_.b("</h1>");_.b("\n" + i);_.b("<ul>");_.b("\n" + i);if(_.s(_.f("names",c,p,1),c,p,0,35,56,"{{ }}")){_.rs(c,p,function(c,p,_){_.b("<li>");_.b(_.v(_.f("name",c,p,0)));_.b("</li>");_.b("\n");});c.pop();}_.b("</ul>");return _.fl();;}
+	function(c,p,i){var _=this;_.b(i=i||"");_.b("<h1>");_.b(_.v(_.f("title",c,p,0)));_.b("</h1>");_.b("\n" + i);_.b("<ul>");_.b("\n" + i);if(_.s(_.f("names",c,p,1),c,p,0,35,56,"{{ }}")){_.rs(c,p,function(c,p,_){_.b("<li>");_.b(_.v(_.f("name",c,p,0)));_.b("</li>");_.b("\n");});c.pop();}_.b("</ul>");return _.fl();;}
 
 ..which can be passed some data..
 
-	var data = {                          
-        "title": "Story",    
-        "names": [           
-            {"name": "Tarzan"},
-            {"name": "Jane"}   
-        ]
+	var data = {
+		"title": "Story",
+		"names": [
+			{"name": "Tarzan"},
+			{"name": "Jane"}
+		]
 	}
 
 ..and it will render..
 
-    var result = template.render(data);
+	var result = template.render(data);
 
 ..into this result:
 
 	<h1>Story</h1>
 	<ul>
-	  <li>Tarzan</li>
-	  <li>Jane>  +</ul>
+		<li>Tarzan</li>
+		<li>Jane</li>
 	</ul>
 
 ## Pre-compiled templates
 
 Since compilation must be done anyway, and it can be done on the server, this is definitely the recommended way to go. Most importantly, it takes away processing on the client, which is great for performance. Additionally, the compiled JS functions serve as a cache in itself. The JS being served to the client can look like this:
 
-    var myApp.templates = {
-        template1: new Hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");_.b("<h1>");_.b(_.v(_.f("title",c,p,0)));_.b("</h1>");_.b("\n" + i);_.b("<ul>");_.b("\n" + i);if(_.s(_.f("names",c,p,1),c,p,0,35,56,"{{ }}")){_.rs(c,p,function(c,p,_){_.b("	<li>");_.b(_.v(_.f("name",c,p,0)));_.b("</li>");_.b("\n");});c.pop();}_.b("</ul>");return _.fl();;}),
-        template2: new Hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");_.b("<p>");_.b(_.v(_.f("message",c,p,0)));_.b("</p>");_.b("\n");return _.fl();;}),
-    }
+	var myApp.templates = {
+		template1: new Hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");_.b("<h1>");_.b(_.v(_.f("title",c,p,0)));_.b("</h1>");_.b("\n" + i);_.b("<ul>");_.b("\n" + i);if(_.s(_.f("names",c,p,1),c,p,0,35,56,"{{ }}")){_.rs(c,p,function(c,p,_){_.b("	<li>");_.b(_.v(_.f("name",c,p,0)));_.b("</li>");_.b("\n");});c.pop();}_.b("</ul>");return _.fl();;}),
+		template2: new Hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");_.b("<p>");_.b(_.v(_.f("message",c,p,0)));_.b("</p>");_.b("\n");return _.fl();;}),
+	}
 
 Any pre-compiled template can then be used like this:
 
-    var result = myApp.templates['template1'].render(data);
-    document.getElementById('placeholder').innerHTML = result;
+	var result = myApp.templates['template1'].render(data);
+	document.getElementById('placeholder').innerHTML = result;
 
 Depending on the situation, even the template rendering can be done server-side. When the data is, or can be made available server-side, this would even further reduce processing on the client, serving pre-rendered HTML to the client. This can be inserted in the DOM right away.
 
@@ -209,12 +209,18 @@ Generate test coverage report to docs/coverage.html (requires [node-jscoverage](
 
 Generate annotated source code in docs folder (using [Docco](http://jashkenas.github.com/docco/))
 
-    make docs
+	make docs
 
 ## Shouts / dependencies
 
-Many thanks to anyone that contributed to the libraries used in this tool:
+Many thanks to anyone that contributed to the libraries used to build this tool (in alphabetical order):
 
-* [Node](http://nodejs.org/)
+* [Async.js](https://github.com/caolan/async)
+* [Chai](http://chaijs.com/)
+* [Chokidar](https://github.com/paulmillr/chokidar)
+* [Commander.js](https://github.com/visionmedia/commander.js)
 * [Express](http://expressjs.com/)
 * [Hogan.js](http://twitter.github.com/hogan.js/)
+* [Mocha](http://visionmedia.github.com/mocha/)
+* [Nock](https://github.com/flatiron/nock)
+* [Node](http://nodejs.org/)
