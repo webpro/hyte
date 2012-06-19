@@ -25,6 +25,9 @@
 			 * Using pre-compiled concatenated templates (from compiled.js)
 			 */
 
+			var html = app.templates['paragraph'].render({"message": "This is rendered client-side in a pre-compiled template (1)."});
+			$('#placeholder').append(html);
+
 			$.getJSON('/data/list.json', function(data) {
 				var html = app.templates['list'].render(data);
 				$('#placeholder').append(html);
@@ -35,12 +38,17 @@
 			 */
 
 			require(['/compile/paragraph'], function(compiledTemplate) {
-				var html = compiledTemplate.render({"message": "This is rendered client-side in a pre-compiled template."});
+				var html = compiledTemplate.render({"message": "This is rendered client-side in a pre-compiled template (2)."});
+				$('#placeholder').append(html);
+			});
+
+			require(['views/paragraph'], function(compiledTemplate) {
+				var html = compiledTemplate.render({"message": "This is rendered client-side in a pre-compiled template (3)."});
 				$('#placeholder').append(html);
 			});
 
 			/*
-			 * Render HTML completely server-side
+			 * Render HTML completely server-side (by providing an endpoint to get data)
 			 */
 
 			var dataURI = location.protocol + '//' + location.host + '/data/paragraph.json';
@@ -50,7 +58,7 @@
 			});
 
 			/*
-			 * Render POSTed data
+			 * Render HTML completely server-side (using POSTed data)
 			 */
 
 			var data = {"message": "This is pre-rendered server-side."};
