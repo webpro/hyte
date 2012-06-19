@@ -14,6 +14,10 @@ var app = express.createServer();
 
 program
 	.version('0.0.3')
+	.option('-d, --template-dir [templateDir]', 'Template directory (default: public/views/)', __dirname + '/public/views/')
+	.option('-e, --template-extension [templateExtension]', 'Template extension (default: .html)', '.html')
+	.option('-t, --compilationSet-template [compilationSetTemplate]', 'Template file for compiled templates (default: lib/compiled.default.mustache)', __dirname + '/lib/compiled.default.mustache')
+	.option('-o, --compilationSet-output [compilationSetOutput]', 'Output file for compiled templates (default: public/compiled.js)', __dirname + '/public/compiled.js')
 	.option('-w, --watcher', 'Enable hyteWatcher')
 	.parse(process.argv);
 
@@ -49,6 +53,15 @@ app.register('html', {
 		};
 	}
 });
+
+// ## hyte configuration
+
+hyte.configure({
+	templateDir: program.templateDir,
+	templateExtension: program.templateExtension,
+	compilationSetTemplate: program.compilationSetTemplate,
+	compilationSetOutput: program.compilationSetOutput
+})
 
 // ## Routes
 
