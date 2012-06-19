@@ -78,7 +78,7 @@ Since compilation must be done anyway, and it can be done on the server, this is
 
 	var myApp.templates = {
 		template1: new Hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");_.b("<h1>");_.b(_.v(_.f("title",c,p,0)));_.b("</h1>");_.b("\n" + i);_.b("<ul>");_.b("\n" + i);if(_.s(_.f("names",c,p,1),c,p,0,35,56,"{{ }}")){_.rs(c,p,function(c,p,_){_.b("	<li>");_.b(_.v(_.f("name",c,p,0)));_.b("</li>");_.b("\n");});c.pop();}_.b("</ul>");return _.fl();;}),
-		template2: new Hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");_.b("<p>");_.b(_.v(_.f("message",c,p,0)));_.b("</p>");_.b("\n");return _.fl();;}),
+		template2: new Hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");_.b("<p>");_.b(_.v(_.f("message",c,p,0)));_.b("</p>");_.b("\n");return _.fl();;})
 	}
 
 Any pre-compiled template can then be used like this:
@@ -133,7 +133,7 @@ This can then be used like this:
 	var html = app.templates['list'].render(data);
 	$('#placeholder').append(html);
 
-The file `/compiled.js` itself is also generated using a template (`/public/views/compiled.template.mustache`).
+The file `/compiled.js` itself is using a compilation template (`lib/compilationSet.default.mustache`).
 
 Location: GET `http://localhost:3000/compiled.js`
 
@@ -141,7 +141,7 @@ Suggested usage: make sure the first and/or most used templates are pre-compiled
 
 ### Pre-compile separate templates
 
-Pre-compiled templates are available at `/compile/[template]`. Compiled to JS in AMD style from `/public/views/[template].html`.
+Pre-compiled templates are available at `/compile/[template]`. Compiled to JS in AMD style from `/public/views/[template].html`, using the compilation template at `lib/compilation.amd.mustache`:
 
 	define(new Hogan.Template(function(c,p,i){}))
 
