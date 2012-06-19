@@ -17,7 +17,7 @@ program
 	.option('-d, --template-dir [templateDir]', 'Template directory (default: public/views/)', __dirname + '/public/views/')
 	.option('-e, --template-extension [templateExtension]', 'Template extension (default: .html)', '.html')
 	.option('-t, --compilation-template [compilationTemplate]', 'Template file for individually compiled templates (default: lib/compilation.amd.mustache)', __dirname + '/lib/compilation.amd.mustache')
-	.option('-t, --compilationSet-template [compilationSetTemplate]', 'Template file for compiled templates (default: lib/compilationSet.default.mustache)', __dirname + '/lib/compilationSet.default.mustache')
+	.option('-s, --compilationSet-template [compilationSetTemplate]', 'Template file for compiled templates (default: lib/compilationSet.default.mustache)', __dirname + '/lib/compilationSet.default.mustache')
 	.option('-o, --compilationSet-output [compilationSetOutput]', 'Output file for compiled templates (default: public/compiled.js)', __dirname + '/public/compiled.js')
 	.option('-w, --watcher', 'Enable hyteWatcher')
 	.parse(process.argv);
