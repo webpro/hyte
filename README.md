@@ -9,6 +9,7 @@ HYbrid TEmplating for the browser and Node. Using [Hogan.js](http://twitter.gith
 * [Pre-compiled templates](#pre-compiled-templates)
 * [Quick overview: hyte](#quick-overview-hyte)
 * [Services](#services)
+* [CLI Options](#cli-options)
 * [Tests](#tests)
 * [Annotated source code](#annotated-source-code)
 * [Shouts / dependencies](#shouts--dependencies)
@@ -19,8 +20,6 @@ HYbrid TEmplating for the browser and Node. Using [Hogan.js](http://twitter.gith
 	node server.js
 
 You can now browse to `http://localhost:3000/index.html` for a demo.
-
-Use `node server.js --watcher` to enable the template file watcher (to recompile templates when it changes).
 
 ## Templating 101
 
@@ -191,9 +190,15 @@ Suggested usage: the data is available client-side, but the compiled template is
 
 Static files from `/public` are available from the root url. E.g. `/index.html` is served from `/public/index.html`.
 
-### Watcher
+## CLI Options
 
 Files from the template directory are watched for changes, and then automatically re-compiled.
+
+To enable this template file watcher (to recompile templates when it changes):
+
+	node server.js --watcher
+
+See `node server.js --help` for all CLI options.
 
 ## Tests
 
