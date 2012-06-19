@@ -7,7 +7,7 @@ describe('hyte', function () {
 			hyte.compile('paragraph', function(error, result) {
 
 				expect(result).to.be.a('string');
-				expect(result).to.match(/^define\(new\ Hogan\.Template\(function.*\)\)$/);
+				expect(result).to.match(/^define\(new\ Hogan\.Template\(function.*\)\)/);
 				done();
 
 			});
