@@ -13,7 +13,7 @@ var app = express.createServer();
 // ## CLI options
 
 program
-	.version('0.0.3')
+	.version('0.0.4')
 	.option('-d, --template-dir [templateDir]', 'Template directory (default: public/views/)', __dirname + '/public/views/')
 	.option('-e, --template-extension [templateExtension]', 'Template extension (default: .html)', '.html')
 	.option('-t, --compilation-template [compilationTemplate]', 'Compilation template for individually compiled templates (default: lib/compilation.amd.mustache)', __dirname + '/lib/compilation.amd.mustache')
