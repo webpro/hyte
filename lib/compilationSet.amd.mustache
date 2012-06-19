@@ -1,7 +1,7 @@
 define(function() {
-	return {
-		{{#templates}}
-		"{{id}}": new Hogan.Template({{{script}}}){{^last}},{{/last}}
-		{{/templates}}
-	}
+	var templates = {};
+	{{#templates}}
+	templates['{{id}}'] = new Hogan.Template({{{script}}});
+	{{/templates}}
+	return templates;
 })

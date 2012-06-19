@@ -1,6 +1,5 @@
 window.app = {};
-window.app.templates = {
+window.app.templates = {}
 {{#templates}}
-	"{{id}}": new Hogan.Template({{{script}}}){{^last}},{{/last}}
+window.app.templates['{{id}}'] = new Hogan.Template({{{script}}});
 {{/templates}}
-};
