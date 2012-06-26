@@ -5,7 +5,7 @@
 var express = require('express'),
 	program = require('commander'),
 	hogan = require('hogan.js'),
-	hyte = require('hyte'),
+	hyte = require('./lib/hyte'),
 	hyteWatcher = require('./lib/hyte-watcher');
 
 var app = express.createServer();
