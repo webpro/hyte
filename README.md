@@ -1,9 +1,10 @@
 # hyte
 
-HYbrid TEmplating for the browser and Node. Using [Hogan.js](http://twitter.github.com/hogan.js/) (based on [mustache](http://mustache.github.com/mustache.5.html)) as templating engine.
+**HY**brid **TE**mplating for the browser and Node. Using [Hogan.js](http://twitter.github.com/hogan.js/) (based on [mustache](http://mustache.github.com/mustache.5.html)) as templating engine.
 
 ## Table of Contents
 
+* [Introduction](#introduction)
 * [Installation](#installation)
 * [Templating 101](#templating-101)
 * [Pre-compiled templates](#pre-compiled-templates)
@@ -13,6 +14,21 @@ HYbrid TEmplating for the browser and Node. Using [Hogan.js](http://twitter.gith
 * [Tests](#tests)
 * [Annotated source code](#annotated-source-code)
 * [Shouts / dependencies](#shouts--dependencies)
+
+## Introduction
+
+The most important reason for me to develop hyte was to learn. To learn and gain experience in a couple of areas, including:
+
+* Pre-compiled templates
+* Reusing templates in Node & in the browser
+* Develop for Node
+* npm packaging
+* Complete project offering:
+  * Works out of the box
+  * Documentation
+  * Tests
+
+Although learning was the main goal, this project still contains lots of interesting and working concepts and demonstrations. Please feel free to use anything from this project in any way you see fit.
 
 ## Installation
 
