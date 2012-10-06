@@ -4,7 +4,7 @@ describe('hyte', function () {
 
 		it('should return a compiled template', function(done) {
 
-			hyte.compile('paragraph', function(error, result) {
+			hyte.compile('public/views/paragraph.html', function(error, result) {
 
 				expect(result).to.be.a('string');
 				expect(result).to.match(/^define\(new\ Hogan\.Template\(function.*\)\)/);
@@ -46,7 +46,7 @@ describe('hyte', function () {
 
 			var data = {"message": "My test text."};
 
-			hyte.render('paragraph', data, function(error, result) {
+			hyte.render('public/views/paragraph.html', data, function(error, result) {
 
 				expect(result).to.be.a('string');
 				expect(result).to.match(/^<p>My test text\.<\/p>/);
@@ -67,7 +67,7 @@ describe('hyte', function () {
 
 			nock(host).get(path).replyWithFile(200, __dirname + '/../public' + path);
 
-			hyte.renderFromEndpoint('paragraph', host + path, function(error, result) {
+			hyte.renderFromEndpoint('public/views/paragraph.html', host + path, function(error, result) {
 
 				if(error) {
 					return done(error);

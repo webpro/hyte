@@ -67,15 +67,17 @@ hyte.configure({
 
 // ## Routes
 
-// **`/compile/:view`**
+// **`/compile/:template`**
 //
-// `:view` will resolve to `templateDir`+`view`+`templateExtension`.
+// `:template` will resolve to `templateDir` + `template` + `templateExtension`.
 //
 // E.g. `/compile/list` compiles `/public/views/list.html` into JS.
 
-app.get('/compile/:view', function(req, res) {
+app.get('/compile/:template', function(req, res) {
 
-	hyte.compile(req.params.view, function(error, content) {
+    var templatePath = program.templateDir + req.params.template + program.templateExtension;
+
+	hyte.compile(templatePath, function(error, content) {
 
 		if(error) {
 
@@ -94,18 +96,20 @@ app.get('/compile/:view', function(req, res) {
 
 });
 
-// **`/render/:view/:dataURI`**
+// **`/render/:template/:dataURI`**
 //
-// `:view` will resolve to `templateDir`+`view`+`templateExtension`
+// `:template` will resolve to `templateDir` + `template` + `templateExtension`
 // `:dataURI` is the absolute (encoded) URI that the view data will be requested from
 //
 // E.g. `/render/paragraph/http%3A%2F%2Flocalhost%3A3000%2Fdata%2Fparagraph.json`
 // serves rendered HTML based on the `/public/views/paragraph.html` template and
 // the data response from `http://localhost:3000/data/paragraph.json`.
 
-app.get('/render/:view/:dataURI', function(req, res) {
+app.get('/render/:template/:dataURI', function(req, res) {
 
-	hyte.renderFromEndpoint(req.params.view, req.params.dataURI, function(error, content) {
+    var templatePath = program.templateDir + req.params.template + program.templateExtension;
+
+	hyte.renderFromEndpoint(templatePath, req.params.dataURI, function(error, content) {
 
 		if(error) {
 
@@ -124,16 +128,18 @@ app.get('/render/:view/:dataURI', function(req, res) {
 
 });
 
-// **`/render/:view`** (POST)
+// **`/render/:template`** (POST)
 //
-// `:view` will resolve to `templateDir`+`view`+`templateExtension`
+// `:template` will resolve to `templateDir` + `template` + `templateExtension`
 //
 // E.g. `/compile/paragraph` will render the template at
 // `/public/views/paragraph.html` using the POSTed data
 
-app.post('/render/:view', function(req, res) {
+app.post('/render/:template', function(req, res) {
 
-	hyte.render(req.params.view, req.body, function(error, content) {
+    var templatePath = program.templateDir + req.params.template + program.templateExtension;
+
+	hyte.render(templatePath, req.body, function(error, content) {
 
 			if(error) {
 
