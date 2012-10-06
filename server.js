@@ -198,5 +198,5 @@ app.listen(3000, function () {
 // Start watching templates for changes (then pre-compile them)
 
 if(program.watcher) {
-	hyteWatcher();
+	hyteWatcher(program.templateDir);
 }
