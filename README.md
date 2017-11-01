@@ -242,6 +242,6 @@ Many thanks to anyone that contributed to the libraries used to build this tool 
 * [Commander.js](https://github.com/visionmedia/commander.js)
 * [Express](http://expressjs.com/)
 * [Hogan.js](http://twitter.github.com/hogan.js/)
-* [Mocha](http://visionmedia.github.com/mocha/)
+* [Mocha](http://mochajs.org/)
 * [Nock](https://github.com/flatiron/nock)
 * [Node](http://nodejs.org/)
